@@ -12,8 +12,15 @@ const (
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_crude"
+
+	// name the key value
+	PostKey = "Resource/value/"
+
+    PostCountKey = "Resource/count/"
 )
 
 func KeyPrefix(p string) []byte {
+
+	
 	return []byte(p)
 }

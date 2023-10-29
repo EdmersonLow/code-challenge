@@ -1,0 +1,12 @@
+syntax = "proto3";
+package crude.crude;
+
+option go_package = "github.com/crude/x/crude/types";
+
+message Resource {
+  
+  string title = 1; 
+  string body = 2; 
+  string creatorr = 3; 
+  uint64 idcreator = 4; 
+}

@@ -7,7 +7,38 @@ option go_package = "github.com/crude/x/crude/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc CreateResource(MsgCreateResource) returns (MsgCreateResourceResponse);
+  rpc UpdateResource(MsgUpdateResource) returns (MsgUpdateResourceResponse);
+  rpc DeleteResource(MsgDeleteResource) returns (MsgDeleteResourceResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgCreateResource {
+  string creator = 1;
+  string title = 2;
+  string body = 3;
+}
+
+message MsgCreateResourceResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateResource {
+  string creator = 1;
+  string title = 2;
+  string body = 3;
+  uint64 id = 4;
+}
+
+message MsgUpdateResourceResponse {
+}
+
+message MsgDeleteResource {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteResourceResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

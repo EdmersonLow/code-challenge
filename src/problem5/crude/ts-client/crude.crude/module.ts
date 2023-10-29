@@ -7,10 +7,43 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
+import { MsgDeleteResource } from "./types/crude/tx";
+import { MsgCreateResource } from "./types/crude/tx";
+import { MsgUpdateResource } from "./types/crude/tx";
 
 
-export {  };
+export { MsgDeleteResource, MsgCreateResource, MsgUpdateResource };
 
+type sendMsgDeleteResourceParams = {
+  value: MsgDeleteResource,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgCreateResourceParams = {
+  value: MsgCreateResource,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgUpdateResourceParams = {
+  value: MsgUpdateResource,
+  fee?: StdFee,
+  memo?: string
+};
+
+
+type msgDeleteResourceParams = {
+  value: MsgDeleteResource,
+};
+
+type msgCreateResourceParams = {
+  value: MsgCreateResource,
+};
+
+type msgUpdateResourceParams = {
+  value: MsgUpdateResource,
+};
 
 
 export const registry = new Registry(msgTypes);
@@ -30,6 +63,72 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
+		async sendMsgDeleteResource({ value, fee, memo }: sendMsgDeleteResourceParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgDeleteResource: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgDeleteResource({ value: MsgDeleteResource.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgDeleteResource: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgCreateResource({ value, fee, memo }: sendMsgCreateResourceParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateResource: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateResource({ value: MsgCreateResource.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateResource: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgUpdateResource({ value, fee, memo }: sendMsgUpdateResourceParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgUpdateResource: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgUpdateResource({ value: MsgUpdateResource.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgUpdateResource: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		
+		msgDeleteResource({ value }: msgDeleteResourceParams): EncodeObject {
+			try {
+				return { typeUrl: "/crude.crude.MsgDeleteResource", value: MsgDeleteResource.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgDeleteResource: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgCreateResource({ value }: msgCreateResourceParams): EncodeObject {
+			try {
+				return { typeUrl: "/crude.crude.MsgCreateResource", value: MsgCreateResource.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateResource: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgUpdateResource({ value }: msgUpdateResourceParams): EncodeObject {
+			try {
+				return { typeUrl: "/crude.crude.MsgUpdateResource", value: MsgUpdateResource.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateResource: Could not create message: ' + e.message)
+			}
+		},
 		
 	}
 };
